@@ -76,10 +76,26 @@ void __fastcall TForm1::ballMovementTimer(TObject *Sender)
         ball -> Left += x;
         ball -> Top += y;
 
+        //To be changed in the future
         if (ball -> Left - MARGIN <= background -> Left) x = -x;
         if (ball -> Top - MARGIN <= background -> Top) y = -y;
         if (ball -> Left + ball -> Width + MARGIN >= background -> Width) x = -x;
         if (ball -> Top + ball -> Height + MARGIN >= background -> Height) y = -y;
+
+        /*if ((ball -> Left <= leftPaddle -> Left + leftPaddle -> Width) &&
+           (ball -> Top + (ball -> Height) / 2 >= leftPaddle -> Top) &&
+           (ball -> Top - (ball -> Height) / 2 <= leftPaddle -> Top + leftPaddle -> Height))
+           {
+                if (x > 0) x = -x;
+           } */
+        if ((ball -> Left <= leftPaddle -> Left + leftPaddle -> Width) &&
+            (ball -> Top + (ball -> Height) / 2 >= leftPaddle -> Top) &&
+            (ball -> Top + (ball -> Height) / 2 <= leftPaddle -> Top + leftPaddle -> Height)) {
+                x = -x;
+                //y = -y;
+        }
+
+
 }
 //---------------------------------------------------------------------------
 
