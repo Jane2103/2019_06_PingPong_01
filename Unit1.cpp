@@ -7,7 +7,17 @@
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
 #pragma resource "*.dfm"
+
+#define MARGIN 10
+#define A 0x41
+#define Z 0x5A
+
+
 TForm1 *Form1;
+
+int x = -10;
+int y = -10;
+
 //---------------------------------------------------------------------------
 __fastcall TForm1::TForm1(TComponent* Owner)
         : TForm(Owner)
@@ -16,30 +26,60 @@ __fastcall TForm1::TForm1(TComponent* Owner)
 //---------------------------------------------------------------------------
 void __fastcall TForm1::leftUpTimer(TObject *Sender)
 {
-        if (leftPaddle -> Top >= 10) leftPaddle -> Top -= 10;
+        if (leftPaddle -> Top >= MARGIN) leftPaddle -> Top -= 10;
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TForm1::FormKeyDown(TObject *Sender, WORD &Key,
       TShiftState Shift)
 {
-        if (Key == 0x41) leftUp -> Enabled = true;  //A
-        if (Key == 0x5A) leftDown -> Enabled = true;  //Z
+        //if (Key == 0x41) leftUp -> Enabled = true;  //A
+        //if (Key == 0x5A) leftDown -> Enabled = true;  //Z
+        if (Key == A) leftUp -> Enabled = true;  //A
+        if (Key == Z) leftDown -> Enabled = true;  //Z
+        if (Key == VK_UP) rightUp -> Enabled = true;
+        if (Key == VK_DOWN) rightDown -> Enabled = true;
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TForm1::FormKeyUp(TObject *Sender, WORD &Key,
       TShiftState Shift)
 {
-        if (Key == 0x41) leftUp -> Enabled = false;
-        if (Key == 0x5A) leftDown -> Enabled = false;
+        if (Key == A) leftUp -> Enabled = false;
+        if (Key == Z) leftDown -> Enabled = false;
+        if (Key == VK_UP) rightUp -> Enabled = false;
+        if (Key == VK_DOWN) rightDown -> Enabled = false;
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TForm1::leftDownTimer(TObject *Sender)
 {
-        if (leftPaddle -> Top + leftPaddle -> Height <= 452) leftPaddle -> Top += 10;
+        if (leftPaddle -> Top + leftPaddle -> Height <= background -> Height - MARGIN) leftPaddle -> Top += 10;
         //if (leftPaddle -> Top + leftPaddle -> Height <= background -> Height) leftPaddle -> Top += 10;
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::rightUpTimer(TObject *Sender)
+{
+        if (rightPaddle -> Top >= MARGIN) rightPaddle -> Top -= 10;
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::rightDownTimer(TObject *Sender)
+{
+        if (rightPaddle -> Top + rightPaddle -> Height <= background -> Height - MARGIN) rightPaddle -> Top += 10;
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::ballMovementTimer(TObject *Sender)
+{
+        ball -> Left += x;
+        ball -> Top += y;
+
+        if (ball -> Left - MARGIN <= background -> Left) x = -x;
+        if (ball -> Top - MARGIN <= background -> Top) y = -y;
+        if (ball -> Left + ball -> Width + MARGIN >= background -> Width) x = -x;
+        if (ball -> Top + ball -> Height + MARGIN >= background -> Height) y = -y;
 }
 //---------------------------------------------------------------------------
 
