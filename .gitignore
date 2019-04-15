@@ -4,3 +4,9 @@
 *.swp
 *.txt
 images
+*.exe
+*.obj
+*.tds
+*.~cpp
+*.~dfm
+*.~h
