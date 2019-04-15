@@ -27,6 +27,8 @@ __published:	// IDE-managed Components
         TButton *score;
         TButton *continueGame;
         TButton *bounces;
+        TScrollBar *scroll;
+        TButton *startButton;
         void __fastcall leftUpTimer(TObject *Sender);
         void __fastcall FormKeyDown(TObject *Sender, WORD &Key,
           TShiftState Shift);
@@ -38,6 +40,9 @@ __published:	// IDE-managed Components
         void __fastcall ballMovementTimer(TObject *Sender);
         void __fastcall newGameClick(TObject *Sender);
         void __fastcall continueGameClick(TObject *Sender);
+        void __fastcall scrollScroll(TObject *Sender,
+          TScrollCode ScrollCode, int &ScrollPos);
+        void __fastcall startButtonClick(TObject *Sender);
 private:	// User declarations
 public:		// User declarations
         __fastcall TForm1(TComponent* Owner);

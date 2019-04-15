@@ -24,7 +24,7 @@ int y = -10;
 int leftPlayerPoints = 0;
 int rightPlayerPoints = 0;
 int numberOfBounces = 0;
-float accelerationFactor = 2.0;
+float accelerationFactor = 1.0;
 
 //---------------------------------------------------------------------------
 __fastcall TForm1::TForm1(TComponent* Owner)
@@ -173,6 +173,7 @@ void __fastcall TForm1::newGameClick(TObject *Sender)
         score -> Visible = false;
         continueGame -> Visible = false;
         bounces -> Visible = false;
+        scroll -> Visible = false;
 }
 //---------------------------------------------------------------------------
 
@@ -192,6 +193,30 @@ void __fastcall TForm1::continueGameClick(TObject *Sender)
 }
 //---------------------------------------------------------------------------
 
+void __fastcall TForm1::scrollScroll(TObject *Sender,
+      TScrollCode ScrollCode, int &ScrollPos)
+{
+        accelerationFactor = ScrollPos;
+}
+//---------------------------------------------------------------------------
 
-
+void __fastcall TForm1::startButtonClick(TObject *Sender)
+{
+        ball -> Left = INIT_BALL_LEFT;
+        ball -> Top = INIT_BALL_TOP;
+        x = -10;
+        y = -10;
+        leftPlayerPoints = 0;
+        rightPlayerPoints = 0;
+        numberOfBounces = 0;
+        ballMovement -> Enabled = true;
+        outNotification -> Visible = false;
+        newGame -> Visible = false;
+        score -> Visible = false;
+        continueGame -> Visible = false;
+        bounces -> Visible = false;
+        scroll -> Visible = false;
+        startButton -> Visible = false;
+}
+//---------------------------------------------------------------------------
 
