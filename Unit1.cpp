@@ -11,12 +11,18 @@
 #define MARGIN 10
 #define A 0x41
 #define Z 0x5A
+#define INIT_BALL_LEFT 468
+#define INIT_BALL_TOP 208
 
 
 TForm1 *Form1;
 
 int x = -10;
 int y = -10;
+
+int leftPlayerPoints = 0;
+int rightPlayerPoints = 0;
+int numberOfBounces = 0;
 
 //---------------------------------------------------------------------------
 __fastcall TForm1::TForm1(TComponent* Owner)
@@ -77,9 +83,9 @@ void __fastcall TForm1::ballMovementTimer(TObject *Sender)
         ball -> Top += y;
 
         //To be changed in the future
-        if (ball -> Left - MARGIN <= background -> Left) x = -x;
+        //if (ball -> Left - MARGIN <= background -> Left) x = -x;
         if (ball -> Top - MARGIN <= background -> Top) y = -y;
-        if (ball -> Left + ball -> Width + MARGIN >= background -> Width) x = -x;
+        //if (ball -> Left + ball -> Width + MARGIN >= background -> Width) x = -x;
         if (ball -> Top + ball -> Height + MARGIN >= background -> Height) y = -y;
 
         /*if ((ball -> Left <= leftPaddle -> Left + leftPaddle -> Width) &&
@@ -94,6 +100,7 @@ void __fastcall TForm1::ballMovementTimer(TObject *Sender)
             (ball -> Top + (ball -> Height) / 2 >= leftPaddle -> Top) &&
             (ball -> Top + (ball -> Height) / 2 <= leftPaddle -> Top + leftPaddle -> Height)) {
                 x = -x;
+                numberOfBounces++;
                 //y = -y;
         }
 
@@ -102,21 +109,74 @@ void __fastcall TForm1::ballMovementTimer(TObject *Sender)
             (ball -> Top + (ball -> Height) / 2 >= rightPaddle -> Top) &&
             (ball -> Top + (ball -> Height) / 2 <= rightPaddle -> Top + rightPaddle -> Height)) {
                 x = -x;
+                numberOfBounces++;
         }
 
         //left out
         if (ball -> Left + ball -> Width + MARGIN < leftPaddle -> Left) {
                 ballMovement -> Enabled = false;
                 //ball -> Visible = false;
+                rightPlayerPoints++;
+                score -> Caption = IntToStr(leftPlayerPoints) + ":" + IntToStr(rightPlayerPoints);
+                score -> Visible = true;
+                continueGame -> Visible = true;
+                outNotification -> Caption = "Out! Punkt dla gracza prawego >";
+                outNotification -> Visible = true;
+                newGame -> Caption = "Graj od nowa";
+                newGame -> Visible = true;
+                bounces -> Caption = "Liczba odbiæ: " + IntToStr(numberOfBounces);
+                bounces -> Visible = true;
         }
 
         //right out
         if (ball -> Left > rightPaddle -> Left + rightPaddle -> Width + MARGIN) {
                 ballMovement -> Enabled = false;
                 //ball -> Visible = false;
+                leftPlayerPoints++;
+                score -> Caption = IntToStr(leftPlayerPoints) + ":" + IntToStr(rightPlayerPoints);
+                score -> Visible = true;
+                continueGame -> Visible = true;
+                outNotification -> Caption = "< Out! Punkt dla gracza lewego";
+                outNotification -> Visible = true;
+                newGame -> Caption = "Graj od nowa";
+                newGame -> Visible = true;
+                bounces -> Caption = "Liczba odbiæ: " + IntToStr(numberOfBounces);
+                bounces -> Visible = true;
         }
+}
+//---------------------------------------------------------------------------
 
+void __fastcall TForm1::newGameClick(TObject *Sender)
+{
+        ball -> Left = INIT_BALL_LEFT;
+        ball -> Top = INIT_BALL_TOP;
+        x = -10;
+        y = -10;
+        leftPlayerPoints = 0;
+        rightPlayerPoints = 0;
+        numberOfBounces = 0;
+        ballMovement -> Enabled = true;
+        outNotification -> Visible = false;
+        newGame -> Visible = false;
+        score -> Visible = false;
+        continueGame -> Visible = false;
+        bounces -> Visible = false;
+}
+//---------------------------------------------------------------------------
 
+void __fastcall TForm1::continueGameClick(TObject *Sender)
+{
+        ball -> Left = INIT_BALL_LEFT;
+        ball -> Top = INIT_BALL_TOP;
+        x = -10;
+        y = -10;
+        numberOfBounces = 0;
+        ballMovement -> Enabled = true;
+        outNotification -> Visible = false;
+        newGame -> Visible = false;
+        score -> Visible = false;
+        continueGame -> Visible = false;
+        bounces -> Visible = false;
 }
 //---------------------------------------------------------------------------
 
