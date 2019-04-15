@@ -104,6 +104,12 @@ void __fastcall TForm1::ballMovementTimer(TObject *Sender)
                 x = -x;
         }
 
+        //left out
+        if (ball -> Left + ball -> Width + MARGIN < leftPaddle -> Left) {
+                ballMovement -> Enabled = false;
+                //ball -> Visible = false;
+        }
+
 
 }
 //---------------------------------------------------------------------------
