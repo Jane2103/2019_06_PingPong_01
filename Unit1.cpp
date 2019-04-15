@@ -13,6 +13,7 @@
 #define Z 0x5A
 #define INIT_BALL_LEFT 468
 #define INIT_BALL_TOP 208
+#define BALL_CENTER ball->Top+(ball->Height)/2
 
 
 TForm1 *Form1;
@@ -23,6 +24,7 @@ int y = -10;
 int leftPlayerPoints = 0;
 int rightPlayerPoints = 0;
 int numberOfBounces = 0;
+float accelerationFactor = 2.0;
 
 //---------------------------------------------------------------------------
 __fastcall TForm1::TForm1(TComponent* Owner)
@@ -39,10 +41,8 @@ void __fastcall TForm1::leftUpTimer(TObject *Sender)
 void __fastcall TForm1::FormKeyDown(TObject *Sender, WORD &Key,
       TShiftState Shift)
 {
-        //if (Key == 0x41) leftUp -> Enabled = true;  //A
-        //if (Key == 0x5A) leftDown -> Enabled = true;  //Z
-        if (Key == A) leftUp -> Enabled = true;  //A
-        if (Key == Z) leftDown -> Enabled = true;  //Z
+        if (Key == A) leftUp -> Enabled = true;
+        if (Key == Z) leftDown -> Enabled = true;
         if (Key == VK_UP) rightUp -> Enabled = true;
         if (Key == VK_DOWN) rightDown -> Enabled = true;
 }
@@ -61,7 +61,6 @@ void __fastcall TForm1::FormKeyUp(TObject *Sender, WORD &Key,
 void __fastcall TForm1::leftDownTimer(TObject *Sender)
 {
         if (leftPaddle -> Top + leftPaddle -> Height <= background -> Height - MARGIN) leftPaddle -> Top += 10;
-        //if (leftPaddle -> Top + leftPaddle -> Height <= background -> Height) leftPaddle -> Top += 10;
 }
 //---------------------------------------------------------------------------
 
@@ -82,40 +81,54 @@ void __fastcall TForm1::ballMovementTimer(TObject *Sender)
         ball -> Left += x;
         ball -> Top += y;
 
-        //To be changed in the future
-        //if (ball -> Left - MARGIN <= background -> Left) x = -x;
+        //Top & bottom margins
         if (ball -> Top - MARGIN <= background -> Top) y = -y;
-        //if (ball -> Left + ball -> Width + MARGIN >= background -> Width) x = -x;
         if (ball -> Top + ball -> Height + MARGIN >= background -> Height) y = -y;
 
+        //bouncing the ball with the left paddle - easy version
         /*if ((ball -> Left <= leftPaddle -> Left + leftPaddle -> Width) &&
-           (ball -> Top + (ball -> Height) / 2 >= leftPaddle -> Top) &&
-           (ball -> Top - (ball -> Height) / 2 <= leftPaddle -> Top + leftPaddle -> Height))
-           {
-                if (x > 0) x = -x;
-           } */
-
-        //bouncing the ball with the left paddle
-        if ((ball -> Left <= leftPaddle -> Left + leftPaddle -> Width) &&
             (ball -> Top + (ball -> Height) / 2 >= leftPaddle -> Top) &&
             (ball -> Top + (ball -> Height) / 2 <= leftPaddle -> Top + leftPaddle -> Height)) {
                 x = -x;
                 numberOfBounces++;
                 //y = -y;
+        }*/
+
+        //bouncing the ball with the left paddle - difficult version
+        if (ball -> Left <= leftPaddle -> Left + leftPaddle -> Width) {
+                if (BALL_CENTER > 1.2 * leftPaddle -> Top && BALL_CENTER < 1.8 * leftPaddle -> Top) {
+                        x = -x;
+                        numberOfBounces++;
+                } else if ((BALL_CENTER > leftPaddle -> Top && BALL_CENTER < 1.2 * leftPaddle -> Top) ||
+                           (BALL_CENTER > 1.8 * leftPaddle -> Top && BALL_CENTER <= leftPaddle -> Top + leftPaddle -> Height)) {
+                        x = (float) -accelerationFactor * x;
+                        numberOfBounces++;
+                }
         }
 
-        //bouncing the ball with the right paddle
-        if ((ball -> Left + ball -> Width >= rightPaddle -> Left) &&
+        //bouncing the ball with the right paddle - easy version
+        /*if ((ball -> Left + ball -> Width >= rightPaddle -> Left) &&
             (ball -> Top + (ball -> Height) / 2 >= rightPaddle -> Top) &&
             (ball -> Top + (ball -> Height) / 2 <= rightPaddle -> Top + rightPaddle -> Height)) {
                 x = -x;
                 numberOfBounces++;
+        }*/
+
+        //bouncing the ball with the right paddle - difficult version
+        if (ball -> Left + ball -> Width >= rightPaddle -> Left) {
+                if (BALL_CENTER > 1.2 * rightPaddle -> Top && BALL_CENTER < 1.8 * rightPaddle -> Top) {
+                        x = -x;
+                        numberOfBounces++;
+                } else if ((BALL_CENTER > rightPaddle -> Top && BALL_CENTER < 1.2 * rightPaddle -> Top) ||
+                           (BALL_CENTER > 1.8 * rightPaddle -> Top && BALL_CENTER <= rightPaddle -> Top + rightPaddle -> Height)) {
+                        x = (float) -accelerationFactor * x;
+                        numberOfBounces++;
+                }
         }
 
         //left out
         if (ball -> Left + ball -> Width + MARGIN < leftPaddle -> Left) {
                 ballMovement -> Enabled = false;
-                //ball -> Visible = false;
                 rightPlayerPoints++;
                 score -> Caption = IntToStr(leftPlayerPoints) + ":" + IntToStr(rightPlayerPoints);
                 score -> Visible = true;
@@ -131,7 +144,6 @@ void __fastcall TForm1::ballMovementTimer(TObject *Sender)
         //right out
         if (ball -> Left > rightPaddle -> Left + rightPaddle -> Width + MARGIN) {
                 ballMovement -> Enabled = false;
-                //ball -> Visible = false;
                 leftPlayerPoints++;
                 score -> Caption = IntToStr(leftPlayerPoints) + ":" + IntToStr(rightPlayerPoints);
                 score -> Visible = true;
@@ -179,4 +191,7 @@ void __fastcall TForm1::continueGameClick(TObject *Sender)
         bounces -> Visible = false;
 }
 //---------------------------------------------------------------------------
+
+
+
 
