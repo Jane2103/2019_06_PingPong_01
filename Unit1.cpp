@@ -4,6 +4,8 @@
 #pragma hdrstop
 
 #include "Unit1.h"
+#include "Unit2.h"
+
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
 #pragma resource "*.dfm"
@@ -24,7 +26,7 @@ int y = -10;
 int leftPlayerPoints = 0;
 int rightPlayerPoints = 0;
 int numberOfBounces = 0;
-float accelerationFactor = 1.5;
+float accelerationFactor = 1.5; 
 
 //---------------------------------------------------------------------------
 __fastcall TForm1::TForm1(TComponent* Owner)
@@ -212,4 +214,13 @@ void __fastcall TForm1::startButtonClick(TObject *Sender)
         startButton -> Visible = false;
 }
 //---------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
 
